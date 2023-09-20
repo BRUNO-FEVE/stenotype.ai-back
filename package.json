@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server",
-    "build": "tsc"
+    "build": "yarn prisma generate tsc"
   },
   "author": "Bruno Fevereiro <br.fevereiro@terra.com.br>",
   "license": "MIT",
