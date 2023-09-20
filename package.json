@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server",
-    "vercel-build": "yarn prisma generate && yarn prisma db push && tsc"
+    "vercel-build": "yarn prisma generate && yarn prisma db push"
   },
   "author": "Bruno Fevereiro <br.fevereiro@terra.com.br>",
   "license": "MIT",
