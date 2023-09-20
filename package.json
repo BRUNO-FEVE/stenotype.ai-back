@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server",
-    "build": "yarn prisma generate tsc"
+    "vercel-build": "yarn prisma generate && yarn prisma db push && tsc"
   },
   "author": "Bruno Fevereiro <br.fevereiro@terra.com.br>",
   "license": "MIT",
@@ -26,7 +26,8 @@
     "ai": "^2.2.12",
     "fastify": "^4.23.1",
     "mongodb": "^6.1.0",
-    "openai": "^4.6.0",
+    "openai": "^4.8.0",
+    "replicate": "^0.18.0",
     "zod": "^3.22.2"
   }
 }
