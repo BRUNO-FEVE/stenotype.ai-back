@@ -7,18 +7,17 @@ import { ObjectId } from "mongodb";
 
 export async function generateAiCompletionRoute( app: FastifyInstance ) {
     app.post('/ai/complete', async (req, rep) => {
-        const { videoId } = req.body as { videoId: string };
-
-        if(!ObjectId.isValid(videoId)) {
-            return rep.status(400).send({ error: "Invalid Object ID" })
-        }
-
         const bodySchema = z.object({
+            videoId: z.string(),
             prompt: z.string(),
             temperature: z.number().min(0).max(1).optional().default(0.5),
         })
 
-        const { prompt, temperature } = bodySchema.parse(req.body)
+        const { videoId, prompt, temperature } = bodySchema.parse(req.body)
+
+        if(!ObjectId.isValid(videoId)) {
+            return rep.status(400).send({ error: "Invalid Object ID" })
+        }
 
         const video = await prisma.video.findUniqueOrThrow({
             where: {
