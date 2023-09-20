@@ -3,14 +3,15 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { createReadStream } from 'node:fs' 
 import { openai } from "../lib/openai";
+import { ObjectId } from "mongodb";
 
 export async function createTranscriptionRoute(app:FastifyInstance) {
     app.post('/videos/:videoId/transcription', async (req, rep) => {
-        const paramsSchema = z.object({
-            videoId: z.string().uuid()
-        })
+        const { videoId } = req.params as { videoId: string }
         
-        const { videoId } = paramsSchema.parse(req.params)
+        if(!ObjectId.isValid(videoId)) {
+            return rep.status(400).send({ error: 'Invalid videoId format' })
+        }
         
         const bodySchema = z.object({
             prompt: z.string()

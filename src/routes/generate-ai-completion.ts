@@ -3,22 +3,30 @@ import { prisma } from "../lib/prisma";
 import { streamToResponse, OpenAIStream } from 'ai'
 import { z } from "zod";
 import { openai } from "../lib/openai";
+import { ObjectId } from "mongodb";
 
 export async function generateAiCompletionRoute( app: FastifyInstance ) {
     app.post('/ai/complete', async (req, rep) => {
+        const { videoId } = req.body as { videoId: string };
+
+        if(!ObjectId.isValid(videoId)) {
+            return rep.status(400).send({ error: "Invalid Object ID" })
+        }
+
         const bodySchema = z.object({
-            videoId: z.string().uuid(),
             prompt: z.string(),
             temperature: z.number().min(0).max(1).optional().default(0.5),
         })
 
-        const { videoId, prompt, temperature } = bodySchema.parse(req.body)
+        const { prompt, temperature } = bodySchema.parse(req.body)
 
         const video = await prisma.video.findUniqueOrThrow({
             where: {
                 id: videoId
             }
         })
+
+        console.log(video)
 
         if(!video.transcription) {
             return rep.status(400).send({ error: "The video transcription wasn't generated yet"})

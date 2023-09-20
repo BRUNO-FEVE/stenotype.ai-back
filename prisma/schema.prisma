@@ -1,17 +1,18 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["mongodb"]
+}
+
 model Video {
-  id            String   @id @default(uuid())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   path          String
   transcription String?
@@ -19,7 +20,7 @@ model Video {
 }
 
 model Prompt {
-  id       String @id @default(uuid())
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
   title    String
   template String
 }

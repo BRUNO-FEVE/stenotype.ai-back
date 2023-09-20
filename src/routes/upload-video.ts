@@ -24,7 +24,7 @@ export async function uploadVideoRoute(app: FastifyInstance) {
 
         const extension = path.extname(data.filename)
 
-        if(extension != '.mp3') {
+        if(extension.toLowerCase() !== '.mp3') {
             return rep.status(400).send({ error: 'Invalid Input type, please upload MP3.' })
         }
 
