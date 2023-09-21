@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { FastifyInstance } from "fastify";
 import { fastifyMultipart } from '@fastify/multipart'
 import path from "node:path";
@@ -6,6 +7,8 @@ import fs from 'node:fs';
 import { promisify } from 'node:util'
 import { pipeline } from "node:stream";
 import { prisma } from "../lib/prisma";
+import { s3 } from "../lib/aws";
+
 const pump = promisify(pipeline)
 
 export async function uploadVideoRoute(app: FastifyInstance) {
@@ -27,19 +30,44 @@ export async function uploadVideoRoute(app: FastifyInstance) {
         if(extension.toLowerCase() !== '.mp3') {
             return rep.status(400).send({ error: 'Invalid Input type, please upload MP3.' })
         }
-
+        
         const fileBaseName = path.basename(data.filename, extension)
         const fileUploadName = `${fileBaseName}-${randomUUID()}${extension}`
         const uploadDir = path.join(__dirname, '../../tmp', fileUploadName)
+        // const fileStream = fs.createReadStream(uploadDir)
+
+        const fileParams = {
+            Bucket: "upload-ai-file-store",
+            Key: fileUploadName,
+            Body: uploadDir
+        }
 
         await pump(data.file, fs.createWriteStream(uploadDir))
+
+        const awsFileData = await s3.upload((fileParams), (error, data) => {
+            if(error) {
+                console.log('Error: ', error)
+            } else {
+                console.log(data.Location)
+            }
+        }).promise()
 
         const video = await prisma.video.create({
             data: {
                 name: data.filename,
-                path: uploadDir
+                path: awsFileData.Location
             }
         })
+
+        fs.unlink(uploadDir, (error) => {
+            if(error) {
+                console.log('Error: ', error)
+            } else {
+                console.log('File Deleted: ', uploadDir)
+            }
+        })
+
+
 
         return {video}
     })

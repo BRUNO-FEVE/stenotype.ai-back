@@ -13,6 +13,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^20.6.0",
     "dotenv": "^16.3.1",
     "prisma": "^5.3.0",
@@ -24,6 +25,7 @@
     "@fastify/multipart": "^7.7.3",
     "@prisma/client": "5.3.0",
     "ai": "^2.2.12",
+    "aws-sdk": "^2.1462.0",
     "fastify": "^4.23.1",
     "mongodb": "^6.1.0",
     "openai": "^4.8.0",
