@@ -35,6 +35,7 @@ export async function uploadVideoRoute(app: FastifyInstance) {
         const fileUploadName = `${fileBaseName}-${randomUUID()}${extension}`
         const uploadDir = path.join(__dirname, '../../tmp', fileUploadName)
         // const fileStream = fs.createReadStream(uploadDir)
+        console.log(uploadDir)
 
         const fileParams = {
             Bucket: "upload-ai-file-store",
@@ -42,7 +43,8 @@ export async function uploadVideoRoute(app: FastifyInstance) {
             Body: uploadDir
         }
 
-        await pump(data.file, fs.createWriteStream(uploadDir))
+        // await pump(data.file, fs.createWriteStream(uploadDir)) --> DEV 
+        await pump(data.file, fs.createWriteStream(`/tmp/${fileUploadName}`))
 
         const awsFileData = await s3.upload((fileParams), (error, data) => {
             if(error) {
@@ -59,13 +61,13 @@ export async function uploadVideoRoute(app: FastifyInstance) {
             }
         })
 
-        // fs.unlink(uploadDir, (error) => {
-        //     if(error) {
-        //         console.log('Error: ', error)
-        //     } else {
-        //         console.log('File Deleted: ', uploadDir)
-        //     }
-        // })
+        fs.unlink(uploadDir, (error) => {
+            if(error) {
+                console.log('Error: ', error)
+            } else {
+                console.log('File Deleted: ', uploadDir)
+            }
+        })
 
 
 
