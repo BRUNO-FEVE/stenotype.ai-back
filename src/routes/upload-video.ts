@@ -59,13 +59,13 @@ export async function uploadVideoRoute(app: FastifyInstance) {
             }
         })
 
-        fs.unlink(uploadDir, (error) => {
-            if(error) {
-                console.log('Error: ', error)
-            } else {
-                console.log('File Deleted: ', uploadDir)
-            }
-        })
+        // fs.unlink(uploadDir, (error) => {
+        //     if(error) {
+        //         console.log('Error: ', error)
+        //     } else {
+        //         console.log('File Deleted: ', uploadDir)
+        //     }
+        // })
 
 
 
