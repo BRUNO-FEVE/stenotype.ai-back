@@ -40,10 +40,11 @@ export async function uploadVideoRoute(app: FastifyInstance) {
         const fileUploadName = `${fileBaseName}-${randomUUID()}${extension}`
         const uploadDir = path.join(__dirname, '/tmp', fileUploadName)
 
-        // await pump(data.file, fs.createWriteStream(uploadDir)) // --> DEV 
-        await pump(data.file, fs.createWriteStream(uploadDir))
+        // const filePath = uploadDir //--> DEV
+        const filePath = `/tmp/${fileUploadName}`
 
-        const fileStream = fs.createReadStream(uploadDir)
+        await pump(data.file, fs.createWriteStream(filePath))
+        const fileStream = fs.createReadStream(filePath)
 
         const transcription = await openai.audio.transcriptions.create({
             file: fileStream,
