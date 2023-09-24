@@ -8,6 +8,8 @@ import { promisify } from 'node:util'
 import { pipeline } from "node:stream";
 import { prisma } from "../lib/prisma";
 import { s3 } from "../lib/aws";
+import { openai } from '../lib/openai';
+import z from 'zod';
 
 const pump = promisify(pipeline)
 
@@ -18,8 +20,11 @@ export async function uploadVideoRoute(app: FastifyInstance) {
         }
     })
 
-    app.post('/videos', async (req, rep) => {
+    app.post('/videos/:prompt', async (req, rep) => {
         const data = await req.file()
+        const { prompt } = req.params as { prompt: string }
+
+        console.log(prompt)
 
         if(!data) {
             return rep.status(400).send({ error: 'Missing File Input.' })
@@ -33,31 +38,27 @@ export async function uploadVideoRoute(app: FastifyInstance) {
         
         const fileBaseName = path.basename(data.filename, extension)
         const fileUploadName = `${fileBaseName}-${randomUUID()}${extension}`
-        const uploadDir = path.join(__dirname, '../../tmp', fileUploadName)
-        // const fileStream = fs.createReadStream(uploadDir)
-        console.log(uploadDir)
+        const uploadDir = path.join(__dirname, '/tmp', fileUploadName)
 
-        const fileParams = {
-            Bucket: "upload-ai-file-store",
-            Key: fileUploadName,
-            Body: uploadDir
-        }
+        // await pump(data.file, fs.createWriteStream(uploadDir)) // --> DEV 
+        await pump(data.file, fs.createWriteStream(uploadDir))
 
-        // await pump(data.file, fs.createWriteStream(uploadDir)) --> DEV 
-        await pump(data.file, fs.createWriteStream(`/tmp/${fileUploadName}`))
+        const fileStream = fs.createReadStream(uploadDir)
 
-        const awsFileData = await s3.upload((fileParams), (error, data) => {
-            if(error) {
-                console.log('Error: ', error)
-            } else {
-                console.log(data.Location)
-            }
-        }).promise()
+        const transcription = await openai.audio.transcriptions.create({
+            file: fileStream,
+            model: 'whisper-1',
+            language: 'pt',
+            response_format: 'json',
+            temperature: 0,
+            prompt,
+        })
 
         const video = await prisma.video.create({
             data: {
                 name: data.filename,
-                path: awsFileData.Location
+                path: uploadDir,
+                transcription: transcription.text
             }
         })
 
