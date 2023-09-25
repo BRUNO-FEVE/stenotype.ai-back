@@ -8,12 +8,7 @@ import { generateAiCompletionRoute } from './routes/generate-ai-completion'
 const app = fastify()
 
 app.register(fastifyCors, {
-    origin: [
-        // 'http://localhost:5173', // --> DEV
-        'https://upload-ai-front-fevs.vercel.app/', 
-        'https://upload-ai-front-git-master-fevs.vercel.app/', 
-        'https://upload-ai-front-alpha.vercel.app/'
-],
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST']
 })
