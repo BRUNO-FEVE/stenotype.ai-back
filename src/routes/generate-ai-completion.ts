@@ -44,7 +44,12 @@ export async function generateAiCompletionRoute( app: FastifyInstance ) {
 
         const stream = OpenAIStream(response)
         streamToResponse(stream, rep.raw, {
-            headers:  {"Access-Control-Allow-Origin": '*', 'Access-Control-Allow-Methods': 'POST'} 
+            headers:  {
+                "Access-Control-Allow-Origin": '*', 
+                'Access-Control-Allow-Methods': 'POST',
+                'Content-Type': 'text/event-stream',
+                'X-Content-Type-Options': 'nosniff'
+            } 
         })
     })
 }

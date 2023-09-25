@@ -7,6 +7,10 @@ import { generateAiCompletionRoute } from './routes/generate-ai-completion'
 
 const app = fastify()
 
+export const config = {
+    runtime: "edge"
+}
+
 app.register(fastifyCors, {
     origin: '*',
     credentials: true,
