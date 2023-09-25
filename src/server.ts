@@ -7,6 +7,8 @@ import { generateAiCompletionRoute } from './routes/generate-ai-completion'
 
 const app = fastify()
 
+export const config = { supportsResponseStreaming: true, }
+
 app.register(fastifyCors, {
     origin: '*',
     credentials: true,
