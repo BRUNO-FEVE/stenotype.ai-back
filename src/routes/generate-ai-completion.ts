@@ -47,8 +47,6 @@ export async function generateAiCompletionRoute( app: FastifyInstance ) {
             headers:  {
                 "Access-Control-Allow-Origin": '*', 
                 'Access-Control-Allow-Methods': 'POST',
-                'Content-Type': 'text/event-stream',
-                'X-Content-Type-Options': 'nosniff'
             } 
         })
     })
