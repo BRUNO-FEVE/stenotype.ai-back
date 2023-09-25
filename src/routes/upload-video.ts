@@ -7,9 +7,7 @@ import fs from 'node:fs';
 import { promisify } from 'node:util'
 import { pipeline } from "node:stream";
 import { prisma } from "../lib/prisma";
-import { s3 } from "../lib/aws";
 import { openai } from '../lib/openai';
-import z from 'zod';
 
 const pump = promisify(pipeline)
 
@@ -40,8 +38,8 @@ export async function uploadVideoRoute(app: FastifyInstance) {
         const fileUploadName = `${fileBaseName}-${randomUUID()}${extension}`
         const uploadDir = path.join(__dirname, '/tmp', fileUploadName)
 
-        // const filePath = uploadDir //--> DEV
-        const filePath = `/tmp/${fileUploadName}`
+        // const filePath = uploadDir //  --> DEV
+        const filePath = `/tmp/${fileUploadName}` //  --> PROD
 
         await pump(data.file, fs.createWriteStream(filePath))
         const fileStream = fs.createReadStream(filePath)

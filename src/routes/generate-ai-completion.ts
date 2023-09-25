@@ -35,19 +35,16 @@ export async function generateAiCompletionRoute( app: FastifyInstance ) {
 
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo-16k',
+            stream: true,
             temperature: temperature,
             messages: [
                 {role: "user", content: promptMessage},
             ],
-            stream: true
         })
 
         const stream = OpenAIStream(response)
         streamToResponse(stream, rep.raw, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST'
-            }
+            headers:  {"Access-Control-Allow-Origin": '*', 'Access-Control-Allow-Methods': 'POST'} 
         })
     })
 }
