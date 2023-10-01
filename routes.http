@@ -4,7 +4,7 @@ GET http://localhost:3333/prompts
 ###
 
 # @name upload
-POST http://localhost:3333/videos
+POST http://localhost:3333/videos/teste
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
