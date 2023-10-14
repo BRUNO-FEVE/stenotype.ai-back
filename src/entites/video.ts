@@ -1,5 +1,4 @@
 import { ObjectId } from "mongodb"
-import path from "path"
 
 interface VideoProps {
     id: ObjectId
@@ -12,6 +11,27 @@ interface VideoProps {
 export class Video {
 
     private props: VideoProps
+
+    constructor(props: VideoProps) {
+        const { id, name, path } = props
+
+        const objectIdValidationResponse = Video.validateObjectId(id)
+        if (!objectIdValidationResponse) {
+            throw new Error('Invalid ID: ' + id)
+        }
+
+        const nameValidationResponse = Video.validateName(name)
+        if (!nameValidationResponse) {
+            throw new Error('Invalid Name: ' + name)
+        }
+
+        const pathValidationResponse = Video.validatePath(path)
+        if (!pathValidationResponse) {
+            throw new Error('Invalid Path: ' + path)
+        }
+
+        this.props = props
+    }
 
     get id (): ObjectId {
         return this.props.id
@@ -26,10 +46,7 @@ export class Video {
     }
 
     get trasncription () {
-        if(this.props.trasncription) {
-            return this.props.trasncription
-        }
-        new Error('Transcription Not Created') 
+        return this.props.trasncription
     }
 
     get createAt () {
@@ -68,33 +85,13 @@ export class Video {
         this.props.createAt = createAt
     }
 
-    constructor(props: VideoProps) {
-        const { id, name, path } = props
-
-        const objectIdValidationResponse = Video.validateObjectId(id)
-        if (!objectIdValidationResponse) {
-            throw new Error('Invalid ID: ' + id)
-        }
-
-        const nameValidationResponse = Video.validateName(name)
-        if (!nameValidationResponse) {
-            throw new Error('Invalid Name: ' + name)
-        }
-
-        const pathValidationResponse = Video.validatePath(path)
-        if (!pathValidationResponse) {
-            throw new Error('Invalid Path: ' + path)
-        }
-
-        this.props = props
-    }
-
     static validateObjectId(id: ObjectId) {
         const validationResponse = ObjectId.isValid(id)
         return validationResponse
     }
 
     static validateName(name: string) {
+        // eslint-disable-next-line no-useless-escape
         if(name.match('[A-Za-z]+\.mp3')) {
             return true
         }
@@ -102,6 +99,7 @@ export class Video {
     }
 
     static validatePath(path: string) {
+        // eslint-disable-next-line no-useless-escape
         if (path.match('/var/task/src/routes/tmp/([A-Za-z0-9]+(-[A-Za-z0-9]+)+)\.mp3')) {
             return true
         }
