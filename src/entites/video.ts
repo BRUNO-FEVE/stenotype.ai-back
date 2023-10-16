@@ -123,22 +123,28 @@ export class Video {
 
     static validateName(name: string) {
         // eslint-disable-next-line no-useless-escape
-        if(name.match('\.mp3$')) {
-            return true
+        const mp3Validation = name.match('\.mp3$')
+        if(!mp3Validation) {
+            return false 
         }
-        return false
+        return true
     }
 
     static validatePath(path: string) {
         // eslint-disable-next-line no-useless-escape
-        if (path.match('\.mp3$')) {
-            return true
+        const mp3Validation = path.match('\.mp3$')
+        const splitedpath = path.split('/')
+        const savedInTmpValidation = !!splitedpath.includes('tmp')
+        if (!mp3Validation) {
+            return false
+        } else if (!savedInTmpValidation) {
+            return false 
         }
-        return false
+        return true
     }
 
-    static async validateTranscription(transcription: string) {
-        const transcriptionCompleted = await transcription
+    static validateTranscription(transcription: string) {
+        const transcriptionCompleted = transcription
         if (transcriptionCompleted.length > 3) {
             return true
         }

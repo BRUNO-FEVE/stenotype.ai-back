@@ -37,11 +37,21 @@ test('invalid name', () => {
     }).toThrowError()
 })
 
-test('invalid path', () => {
+test('invalid path: must end with .mp3', () => {
     expect(() => {
         new Video({
             name:'audio.mp3',
             path:'/var/task/src/routes/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp4',
+            transcription: 'Trascription',
+        })
+    }).toThrowError()
+})
+
+test('invalid path: must be saved on tmp folder', () => {
+    expect(() => {
+        new Video({
+            name:'audio.mp3',
+            path:'/var/task/src/routes/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp4',
             transcription: 'Trascription',
         })
     }).toThrowError()
