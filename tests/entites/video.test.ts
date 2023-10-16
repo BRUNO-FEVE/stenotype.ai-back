@@ -1,13 +1,25 @@
 import { expect, test } from 'vitest'
 import { Video } from '../../src/entites/video'
-import { ObjectId } from 'mongodb'
 
-test('create video', () => {
+
+test('create a new video', () => {
     const video = new Video({
-        id: new ObjectId(),
         name:'audio.mp3',
-        path:'/var/task/src/routes/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp3',
-        trasncription: 'Trascription',
+        path:'/var/task/src/use-cases/crete-video/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp3',
+        transcription: 'Trascription',
+    })
+
+    expect(video).toBeInstanceOf(Video)
+    expect(video.id).toBeDefined()
+    expect(video.createAt).toBeDefined()
+})
+
+test('create video based on old video', () => {
+    const video = new Video({
+        id: "652cb2b17e1c9163bd794253",
+        name:'audio.mp3',
+        path:'/var/task/src/use-cases/crete-video/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp3',
+        transcription: 'Trascription',
         createAt: new Date()
     })
 
@@ -18,11 +30,9 @@ test('create video', () => {
 test('invalid name', () => {
     expect(() => {
         new Video({
-            id: new ObjectId(),
-            name:'audio.mp8',
-            path:'/var/task/src/routes/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp5',
-            trasncription: 'Trascription',
-            createAt: new Date()
+            name:'audio.mp4',
+            path:'/var/task/src/use-cases/crete-video/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp3',
+            transcription: 'Trascription',
         })
     }).toThrowError()
 })
@@ -30,11 +40,9 @@ test('invalid name', () => {
 test('invalid path', () => {
     expect(() => {
         new Video({
-            id: new ObjectId(),
             name:'audio.mp3',
-            path:'/var/task/src/routes/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp5',
-            trasncription: 'Trascription',
-            createAt: new Date()
+            path:'/var/task/src/routes/tmp/audio-8dbff461-ee43-4028-bf3d-233a5855acc5.mp4',
+            transcription: 'Trascription',
         })
     }).toThrowError()
 })
