@@ -1,10 +1,18 @@
 import { ObjectId } from "mongodb"
 
-interface VideoProps {
-    id: ObjectId
+export interface VideoProps {
+    id?: string
     name: string
     path: string
-    trasncription?: string
+    transcription: string
+    createAt?: Date
+}
+
+export interface JsonProps {
+    id: string
+    name: string
+    path: string
+    transcription: string
     createAt: Date
 }
 
@@ -13,27 +21,46 @@ export class Video {
     private props: VideoProps
 
     constructor(props: VideoProps) {
-        const { id, name, path } = props
+        this.props = {} as VideoProps
+        const { id, name, path, transcription, createAt } = props
 
-        const objectIdValidationResponse = Video.validateObjectId(id)
-        if (!objectIdValidationResponse) {
-            throw new Error('Invalid ID: ' + id)
+        const isAOldVideo = !!id
+        if (!isAOldVideo) {
+            this.props.id = new ObjectId().toString()
+        } else {
+            const validationOfExistingId = Video.validateObjectId(id)
+            if (!validationOfExistingId) {
+                throw new Error('Invalid ID: ' + id)
+            }
+            this.props.id = id
         }
-
+        
         const nameValidationResponse = Video.validateName(name)
         if (!nameValidationResponse) {
             throw new Error('Invalid Name: ' + name)
         }
+        this.props.name = name
 
         const pathValidationResponse = Video.validatePath(path)
         if (!pathValidationResponse) {
             throw new Error('Invalid Path: ' + path)
         }
+        this.props.path = path
 
-        this.props = props
+        const transcriptionValidationResponse = Video.validateTranscription(transcription)
+        if (!transcriptionValidationResponse) {
+            throw new Error('Invalid Transcription: ' + props.transcription)
+        }
+        this.props.transcription = transcription
+
+        if (!createAt) {
+            this.props.createAt = new Date()
+        } else {
+            this.props.createAt = createAt
+        }
     }
 
-    get id (): ObjectId {
+    get id (): string {
         return this.props.id
     }
 
@@ -46,14 +73,14 @@ export class Video {
     }
 
     get trasncription () {
-        return this.props.trasncription
+        return this.props.transcription
     }
 
     get createAt () {
         return this.props.createAt
     }
 
-    set id (id: ObjectId) {
+    set id (id: string) {
         const validationResponse = Video.validateObjectId(id)
         if (validationResponse) {
             this.props.id = id    
@@ -62,7 +89,7 @@ export class Video {
     }
 
     set name (name: string) {
-        const valiadationResponse = Video.validateName(name)
+        const valiadationResponse = true
         if (valiadationResponse) {
             this.props.name = name    
         }
@@ -70,29 +97,33 @@ export class Video {
     }
 
     set path (path: string) {
-        const validationResponse = Video.validatePath(path)
-        if (validationResponse) {
+        // const validationResponse = Video.validatePath(path)
+        if (path) {
             this.props.path = path    
         }
         throw new Error('Invalid Path: ' + path)
     }
 
     set trasncription (transcription: string) {
-        this.props.trasncription = transcription
+        const valiadationResponse = true
+        if (valiadationResponse) {
+            this.props.transcription = transcription
+        }
+        throw new Error('Invalid Transcription: ' + transcription)
     }
 
     set createAt (createAt: Date) {
         this.props.createAt = createAt
     }
 
-    static validateObjectId(id: ObjectId) {
+    static validateObjectId(id: string) {
         const validationResponse = ObjectId.isValid(id)
         return validationResponse
     }
 
     static validateName(name: string) {
         // eslint-disable-next-line no-useless-escape
-        if(name.match('[A-Za-z]+\.mp3')) {
+        if(name.match('\.mp3$')) {
             return true
         }
         return false
@@ -100,10 +131,37 @@ export class Video {
 
     static validatePath(path: string) {
         // eslint-disable-next-line no-useless-escape
-        if (path.match('/var/task/src/routes/tmp/([A-Za-z0-9]+(-[A-Za-z0-9]+)+)\.mp3')) {
+        if (path.match('\.mp3$')) {
             return true
         }
         return false
     }
 
+    static async validateTranscription(transcription: string) {
+        const transcriptionCompleted = await transcription
+        if (transcriptionCompleted.length > 3) {
+            return true
+        }
+        return false
+    }
+
+    static toJson(video: Video) {
+        return {
+            "id": video.id,
+            "name": video.props.name,
+            "path": video.props.path,
+            "transcription": video.props.transcription,
+            "createAt": video.props.createAt
+        }
+    }
+
+    static fromJson(json: JsonProps): Video {
+        return new Video({
+            id: json.id,
+            name: json.name,
+            path: json.path,
+            transcription: json.transcription,
+            createAt: json.createAt
+        })
+    }
 }
