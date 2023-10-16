@@ -12,7 +12,7 @@
   "author": "Bruno Fevereiro <br.fevereiro@terra.com.br>",
   "license": "MIT",
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"  
   },
   "devDependencies": {
     "@types/mongodb": "^4.0.7",
@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
-    "@fastify/multipart": "^7.7.3",
     "@prisma/client": "5.3.0",
     "ai": "^2.2.12",
     "aws-sdk": "^2.1462.0",

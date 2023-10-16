@@ -12,15 +12,15 @@ generator client {
 }
 
 model Video {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @map("_id") @db.ObjectId
   name          String
   path          String
   transcription String?
-  createAt      DateTime @default(now())
+  createAt      DateTime
 }
 
 model Prompt {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  id       String @id @map("_id") @db.ObjectId
   title    String
   template String
 }
