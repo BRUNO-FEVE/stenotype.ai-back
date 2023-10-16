@@ -24,8 +24,8 @@ export class CreateVideoUsecase {
     const fileUploadName = `${fileBaseName}-${randomUUID()}${extension}`
     const uploadDir = path.join(__dirname, '/tmp', fileUploadName)
     
-    const filePath = uploadDir //  --> DEV
-    // const filePath = `/tmp/${fileUploadName}` //  --> PROD
+    // const filePath = uploadDir //  --> DEV
+    const filePath = `/tmp/${fileUploadName}` //  --> PROD
 
 
     const readableStream = new Readable()
