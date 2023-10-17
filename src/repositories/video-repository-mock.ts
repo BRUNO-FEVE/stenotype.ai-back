@@ -1,7 +1,7 @@
 import { Video } from "../entites/video";
 import { IVideosRepository } from "./i-videos-repository";
 
-export class videoRepositoryMock implements IVideosRepository {
+export class VideoRepositoryMock implements IVideosRepository {
   public items: Video[] = [];
 
   async findById(videoId: string): Promise<Video> {
