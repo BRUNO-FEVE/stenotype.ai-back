@@ -1,5 +1,5 @@
 import path from "path";
-import { Video } from "../../entites/video";
+import { Video } from "../../entities/video";
 import { ITranscriptionProvider } from "../../providers/i-transcription-provider";
 import { IVideosRepository } from "../../repositories/i-videos-repository";
 import { ICreateVideoRequestDTO } from "./create-video-dto";
@@ -13,7 +13,7 @@ const pump = promisify(pipeline);
 export class CreateVideoUsecase {
   constructor(
     private videoRepository: IVideosRepository,
-    private transcriptionProvider: ITranscriptionProvider,
+    private transcriptionProvider: ITranscriptionProvider
   ) {}
 
   async execute(data: ICreateVideoRequestDTO): Promise<Video> {
@@ -22,7 +22,7 @@ export class CreateVideoUsecase {
     const extension = path.extname(file.filename);
     const fileBaseName = path.basename(file.filename, extension);
     const fileUploadName = `${fileBaseName}-${randomUUID()}${extension}`;
-    const uploadDir = path.join(__dirname, "/tmp", fileUploadName);
+    // const uploadDir = path.join(__dirname, "/tmp", fileUploadName);
 
     // const filePath = uploadDir //  --> DEV
     const filePath = `/tmp/${fileUploadName}`; //  --> PROD
@@ -51,14 +51,6 @@ export class CreateVideoUsecase {
     });
 
     const videoSaved = await this.videoRepository.create(video);
-
-    fs.unlink(uploadDir, (error) => {
-      if (error) {
-        console.log("Error: ", error);
-      } else {
-        console.log("File Deleted: ", uploadDir);
-      }
-    });
 
     return videoSaved;
   }

@@ -1,4 +1,4 @@
-import { Video } from "../entites/video";
+import { Video } from "../entities/video";
 
 export interface IVideosRepository {
   findById(videoId: string): Promise<Video>;

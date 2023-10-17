@@ -1,14 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { CreateVideoUsecase } from "./create-video-use-case";
 import path from "path";
-import { Video } from "../../entites/video";
+import { Video } from "../../entities/video";
 
 export class CreateVideoController {
   constructor(private createVideoUsecase: CreateVideoUsecase) {}
 
   async handle(
     request: FastifyRequest,
-    response: FastifyReply,
+    response: FastifyReply
   ): Promise<FastifyReply> {
     const data = await request.file();
     const { prompt } = request.params as { prompt: string };

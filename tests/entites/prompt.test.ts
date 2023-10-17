@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Prompt } from "../../src/entites/prompt";
+import { Prompt } from "../../src/entities/prompt";
 import { ObjectId } from "mongodb";
 
 test("create prompt", () => {

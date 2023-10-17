@@ -1,7 +1,6 @@
 import { fastify } from "fastify";
 import { fastifyCors } from "@fastify/cors";
 import { getAllPromptsRoute } from "./routes/get-all-prompts";
-import { createTranscriptionRoute } from "./routes/create-transcription";
 import { generateAiCompletionRoute } from "./routes/generate-ai-completion";
 import { getVideo } from "./routes/get-video";
 import { createVideoRoute } from "./routes/create-video";
@@ -18,8 +17,6 @@ app.register(fastifyCors, {
 
 app.register(getAllPromptsRoute);
 app.register(getVideo);
-// app.register(uploadVideoRoute)
-app.register(createTranscriptionRoute);
 app.register(generateAiCompletionRoute);
 app.register(createVideoRoute);
 

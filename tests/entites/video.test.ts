@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Video } from "../../src/entites/video";
+import { Video } from "../../src/entities/video";
 
 test("create a new video", () => {
   const video = new Video({
