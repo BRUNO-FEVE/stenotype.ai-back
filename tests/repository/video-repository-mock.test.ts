@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
-import { Video } from "../../src/entites/video";
+import { Video } from "../../src/entities/video";
 import { VideoRepositoryMock } from "../../src/repositories/video-repository-mock";
+import { ObjectId } from "mongodb";
 
 test("create new video repository", async () => {
   const video = new Video({
@@ -29,9 +30,10 @@ test("create a existing video on repository", async () => {
 
   const repo = new VideoRepositoryMock();
   await repo.create(video);
-  const existingVideo = await repo.create(video);
 
-  expect(existingVideo).not.toBeDefined();
+  await expect(async () => {
+    await repo.create(video);
+  }).rejects.toThrowError();
 });
 
 test("find by id video on repository", async () => {
@@ -51,9 +53,11 @@ test("find by id video on repository", async () => {
   expect(videoFound).toEqual(video);
 });
 
-test("find by id  gost video on repository", async () => {
+test("find by id unexisting video on repository", async () => {
   const repo = new VideoRepositoryMock();
-  const videoFound = await repo.findById("652cb2b17e1c9163bd794253");
+  const randomFakeId = new ObjectId().toString();
 
-  expect(videoFound).not.toBeDefined();
+  await expect(async () => {
+    await repo.findById(randomFakeId);
+  }).rejects.toThrowError();
 });

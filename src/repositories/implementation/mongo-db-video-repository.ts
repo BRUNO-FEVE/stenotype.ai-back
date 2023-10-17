@@ -1,4 +1,4 @@
-import { Video } from "../../entites/video";
+import { Video } from "../../entities/video";
 import { IVideosRepository } from "../i-videos-repository";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
@@ -19,16 +19,10 @@ export class MongoDBVideoRepository implements IVideosRepository {
     });
 
     if (!videoData) {
-      throw new Error("Video Not Found.");
+      throw new Error("Video Not teste.");
     }
 
-    const video = new Video({
-      id: videoData.id,
-      name: videoData.name,
-      path: videoData.path,
-      transcription: videoData.transcription,
-      createAt: videoData.createAt,
-    });
+    const video = Video.fromJson(videoData);
 
     return video;
   }
