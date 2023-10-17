@@ -1,30 +1,32 @@
-import { fastify } from 'fastify'
-import { fastifyCors } from '@fastify/cors'
-import { getAllPromptsRoute } from './routes/get-all-prompts'
-import { createTranscriptionRoute } from './routes/create-transcription'
-import { generateAiCompletionRoute } from './routes/generate-ai-completion'
-import { getVideo } from './routes/get-video'
-import { createVideoRoute } from './routes/create-video'
+import { fastify } from "fastify";
+import { fastifyCors } from "@fastify/cors";
+import { getAllPromptsRoute } from "./routes/get-all-prompts";
+import { createTranscriptionRoute } from "./routes/create-transcription";
+import { generateAiCompletionRoute } from "./routes/generate-ai-completion";
+import { getVideo } from "./routes/get-video";
+import { createVideoRoute } from "./routes/create-video";
 
-const app = fastify()
+const app = fastify();
 
-export const config = { supportsResponseStreaming: true, }
+export const config = { supportsResponseStreaming: true };
 
 app.register(fastifyCors, {
-    origin: '*',
-    credentials: true,
-    methods: ['GET', 'POST']
-})
+  origin: "*",
+  credentials: true,
+  methods: ["GET", "POST"],
+});
 
-app.register(getAllPromptsRoute)
-app.register(getVideo)
+app.register(getAllPromptsRoute);
+app.register(getVideo);
 // app.register(uploadVideoRoute)
-app.register(createTranscriptionRoute)
-app.register(generateAiCompletionRoute)
-app.register(createVideoRoute)
+app.register(createTranscriptionRoute);
+app.register(generateAiCompletionRoute);
+app.register(createVideoRoute);
 
-app.listen({
-    port: 3333
-}).then(() => {
-    console.log('HTTP Server Running! \n\nPORT:3333')
-})
+app
+  .listen({
+    port: 3333,
+  })
+  .then(() => {
+    console.log("HTTP Server Running! \n\nPORT:3333");
+  });

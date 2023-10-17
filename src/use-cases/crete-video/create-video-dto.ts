@@ -1,6 +1,6 @@
-import { MultipartFile } from "@fastify/multipart"
+import { MultipartFile } from "@fastify/multipart";
 
 export interface ICreateVideoRequestDTO {
-    file:  MultipartFile
-    prompt: string
+  file: MultipartFile;
+  prompt: string;
 }
